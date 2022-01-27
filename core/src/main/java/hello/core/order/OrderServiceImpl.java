@@ -16,6 +16,7 @@ public class OrderServiceImpl implements OrderService {
     private final DiscountPolicy discountPolicy;
 
     @Autowired// 생성자가 하나이면 @Autowired 생략해도 된다.
+    // final 키워드를 추가하게 하므로 컴파일 오류를 발생시킨다.
     public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
 
         System.out.println("memberRepository = " + memberRepository);
