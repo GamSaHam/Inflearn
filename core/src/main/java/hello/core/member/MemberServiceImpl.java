@@ -2,6 +2,7 @@ package hello.core.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 @Component
 // 구현체 하나가 있을 경우에는 Impl 이라고 관례상 한다.
