@@ -11,7 +11,7 @@ import hello.core.order.OrderServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@Configuration // Configuration이 없으면 바이트 코드를 조작해서 생성되는 hello.core.AppConfig$xxx 자식 항목이 없어진다.
 public class AppConfig {
 
 
