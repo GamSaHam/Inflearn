@@ -4,10 +4,12 @@ import hello.core.discount.DiscountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
 import hello.core.member.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor // final 로 정의된 생성자를 자동 만들어준다.
 public class OrderServiceImpl implements OrderService {
 
     // @Autowired 필드 주입 : 필드 주입은 외부에서 테스트 코드로 변경 할 수 없기 때문에 권장하지 않는다.
@@ -15,15 +17,15 @@ public class OrderServiceImpl implements OrderService {
     private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
 
-    @Autowired// 생성자가 하나이면 @Autowired 생략해도 된다.
+    // 생성자가 하나이면 @Autowired 생략해도 된다.
     // final 키워드를 추가하게 하므로 컴파일 오류를 발생시킨다.
-    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
-
-        System.out.println("memberRepository = " + memberRepository);
-        System.out.println("discountPolicy = " + discountPolicy);
-        this.memberRepository = memberRepository;
-        this.discountPolicy = discountPolicy;
-    }
+//    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+//
+//        System.out.println("memberRepository = " + memberRepository);
+//        System.out.println("discountPolicy = " + discountPolicy);
+//        this.memberRepository = memberRepository;
+//        this.discountPolicy = discountPolicy;
+//    }
 
 //    @Autowired // 수정자 의존성 주입
 //    public void setMemberRepository(MemberRepository memberRepository) {
