@@ -23,7 +23,6 @@ public class ConcreteProxyTest {
         ConcreteClient client = new ConcreteClient(timeProxy);
         client.execute();
 
-
     }
 
 
