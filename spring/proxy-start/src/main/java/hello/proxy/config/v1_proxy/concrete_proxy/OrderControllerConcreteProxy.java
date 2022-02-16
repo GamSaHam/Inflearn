@@ -8,10 +8,10 @@ import hello.proxy.trace.logtrace.LogTrace;
 
 public class OrderControllerConcreteProxy extends OrderControllerV2 {
 
-    private final OrderControllerV1 target;
+    private final OrderControllerV2 target;
     private final LogTrace logTrace;
 
-    public OrderControllerConcreteProxy(OrderControllerV1 target, LogTrace logTrace) {
+    public OrderControllerConcreteProxy(OrderControllerV2 target, LogTrace logTrace) {
         super(null);
         this.target = target;
         this.logTrace = logTrace;
