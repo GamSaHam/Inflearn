@@ -16,6 +16,7 @@ public class CglibTest {
 
         ConcreteService target = new ConcreteService();
 
+
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(ConcreteService.class);
         enhancer.setCallback(new TimeMethodInterceptor(target));
