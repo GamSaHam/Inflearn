@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Import;
 
 @Slf4j
 @Import(ParameterTest.ParameterAspect.class)
-@SpringBootTest
+
 public class ParameterTest {
 
     @Autowired
