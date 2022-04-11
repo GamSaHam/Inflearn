@@ -17,7 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+
 /**
+ * 정정 리소스 전달, 뷰 템플릿 사용, Http 메시지 사용 Response 전달시에
  * {"username": "hello", "age": 20}
  * content-type: application/json
  */
