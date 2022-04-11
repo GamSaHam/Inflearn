@@ -1,7 +1,9 @@
 package hello.springmvc.basic.request;
 
+import hello.springmvc.basic.HelloData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -66,7 +68,6 @@ public class RequestParamController {
         return "ok";
     }
 
-
     /**
      * defaultValue 들어가면 required 항목이 필요없어진다.
      * 빈문자인경우에도 처리가 된다.
@@ -83,7 +84,6 @@ public class RequestParamController {
         return "ok";
     }
 
-
     @ResponseBody
     @RequestMapping("/request-param-map")
     public String requestParamsMap(@RequestParam Map<String , Object> paramMap) {
@@ -91,7 +91,37 @@ public class RequestParamController {
         return "ok";
     }
 
+    /**
+     * HelloData 객체를 생성한다. HelloData 객체 프로퍼티를 찾는다. setter 를 호출하여 바인딩한다.
+     * @param helloData
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/model-attribute-v1")
+    public String modelAttributeV1(@ModelAttribute HelloData helloData) {
+
+        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+
+        return "ok";
+    }
+
+    @ResponseBody
+    @RequestMapping("/model-attribute-v2")
+    public String modelAttributeV2(HelloData helloData) {
+
+        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+
+        return "ok";
+    }
+
+
 
 
 
 }
+
+
+
+
+
+
