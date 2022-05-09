@@ -38,11 +38,11 @@ public class BasicItemController {
         return "basic/addForm";
     }
 
-//    @PostMapping("/add")
+    //    @PostMapping("/add")
     public String addItemV1(@RequestParam String itemName,
-                       @RequestParam int price,
-                       @RequestParam Integer quantity,
-                       Model model) {
+                            @RequestParam int price,
+                            @RequestParam Integer quantity,
+                            Model model) {
 
         Item item = new Item();
         item.setItemName(itemName);
@@ -57,9 +57,9 @@ public class BasicItemController {
 
     }
 
-//    @PostMapping("/add")
+    //    @PostMapping("/add")
     public String addItemV2(
-                        @ModelAttribute("item") Item item,Model model) {
+            @ModelAttribute("item") Item item, Model model) {
 
         itemRepository.save(item);
 //        model.addAttribute("item", item); //자동 추가, 생략 가능
@@ -68,7 +68,7 @@ public class BasicItemController {
 
     }
 
-//    @PostMapping("/add")
+    //    @PostMapping("/add")
     public String addItemV3(
             @ModelAttribute Item item) {
 
@@ -78,16 +78,32 @@ public class BasicItemController {
 
     }
 
-        @PostMapping("/add")
-    public String addItemV4(
-            Item item) {
-
+    //    @PostMapping("/add")
+    public String addItemV4(Item item) {
         itemRepository.save(item);
 
-        return "basic/item";
+        return "redirect:/basic/items/" + item.getId();
 
     }
 
+
+    @GetMapping("/{itemId}/edit")
+    public String editFrom(@PathVariable Long itemId, Model model) {
+
+        Item item = itemRepository.findById(itemId);
+        model.addAttribute("item", item);
+
+        return "basic/editForm";
+
+    }
+
+
+    @PostMapping("/{itemId}/edit")
+    public String edit(@PathVariable Long itemId, @ModelAttribute Item item) {
+        itemRepository.update(itemId, item);
+
+        return "redirect:/basic/items/{itemId}";
+    }
 
 
     /**
@@ -98,9 +114,6 @@ public class BasicItemController {
         itemRepository.save(new Item("itemA", 10000, 10));
         itemRepository.save(new Item("itemB", 20000, 20));
     }
-
-
-
 
 
 }
