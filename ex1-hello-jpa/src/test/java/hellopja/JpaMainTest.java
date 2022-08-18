@@ -9,8 +9,6 @@ import javax.persistence.Persistence;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class JpaMainTest {
     @Test
     void crudMemberTest() {
@@ -25,16 +23,16 @@ class JpaMainTest {
             // 회원등록
             Member member = new Member();
             member.setId(2L);
-            member.setName("김길동");
+            member.setUserName("김길동");
             em.persist(member);
 
             // 회원 조회
             Member findMember = em.find(Member.class, 1L);
             System.out.println("findMember.id = " + findMember.getId());
-            System.out.println("findMember.name = " + findMember.getName());
+            System.out.println("findMember.name = " + findMember.getUserName());
 
             // 회원 수정
-            findMember.setName("HelloJPA"); // commit 하기 직전에 update 쿼리 발생
+            findMember.setUserName("HelloJPA"); // commit 하기 직전에 update 쿼리 발생
 
 
             // dialect 항목을 바꾸어도 sql을 만들어짐
@@ -44,7 +42,7 @@ class JpaMainTest {
                     .getResultList();
 
             for (Member tempMember : result) {
-                System.out.println("tempMember.name = " + tempMember.getName());
+                System.out.println("tempMember.name = " + tempMember.getUserName());
             }
 
             tx.commit();
@@ -69,7 +67,7 @@ class JpaMainTest {
             // 비영속
             Member member = new Member();
             member.setId(101L);
-            member.setName("HelloJpa");
+            member.setUserName("HelloJpa");
 //
             // 영속
 //            System.out.println("=== BEFORE ===");
@@ -203,7 +201,7 @@ class JpaMainTest {
             // em.close() // 영속성 컨텐스트 종료
 
             Member member = em.find(Member.class, 150L);
-            member.setName("AAA");
+            member.setUserName("AAA");
             em.detach(member);
 
             // 영속성 컨텐스트에서 1차 캐시 항목에 없앤다.

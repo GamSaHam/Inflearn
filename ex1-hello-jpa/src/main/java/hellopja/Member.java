@@ -1,37 +1,52 @@
 package hellopja;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+//@SequenceGenerator(name="member_seq_generator" , sequenceName = "member_seq")
 public class Member {
-    @Id
+    @Id // 기본키 매핑
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq_generator")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String userName;
+    private Integer age;
 
-    public Member() {
-    }
 
-    public Member(Long id, String name) {
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID")
+    private Team team;
+
+    public Member(Long id, String userName) {
         this.id = id;
-        this.name = name;
-    }
-    public Long getId() {
-        return id;
+        this.userName = userName;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Enumerated(EnumType.STRING)
+    private RolType rolType;
 
-    public String getName() {
-        return name;
-    }
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDate;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastModifiedDate;
+
+    @Lob
+    private String description;
+
+    // 메모리에서만 사용
+    @Transient
+    private int temp;
+
 }
+
 
 
