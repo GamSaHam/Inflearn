@@ -1,3 +1,6 @@
+import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.domain.OrderItem;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -15,7 +18,14 @@ public class JpaMain {
         try {
             // 객체를 테이블에 맞추어 데이터 중심으로 모델링 하면, 협력 관계를 만들 수 없다.
 
+            Order order = new Order();
+//            order.addOrderItem(new OrderItem());
+            em.persist(order);
 
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+
+            em.persist(orderItem);
 
             System.out.println("===================");
             tx.commit();
