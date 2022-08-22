@@ -170,7 +170,7 @@ class JpaMainTest {
             // 데이터 베이스랑 동기화
             // 트랜잭션이라는 작업 단위가 중요
 
-            Member member = new Member(200L, "member 200");
+            Member member = new Member("member 200");
             em.persist(member);
 
             em.flush();

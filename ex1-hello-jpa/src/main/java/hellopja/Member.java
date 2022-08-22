@@ -1,21 +1,18 @@
 package hellopja;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 //@SequenceGenerator(name="member_seq_generator" , sequenceName = "member_seq")
 public class Member {
     @Id // 기본키 매핑
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq_generator")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
     private String userName;
     private Integer age;
@@ -25,27 +22,58 @@ public class Member {
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
-    public Member(Long id, String userName) {
-        this.id = id;
+    public Member( String userName) {
         this.userName = userName;
     }
 
-    @Enumerated(EnumType.STRING)
-    private RolType rolType;
+//    @Enumerated(EnumType.STRING)
+//    private RolType rolType;
+//
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date createdDate;
+//
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date lastModifiedDate;
+//
+//    @Lob
+//    private String description;
+//
+//    // 메모리에서만 사용
+//    @Transient
+//    private int temp;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastModifiedDate;
+    public Long getId() {
+        return id;
+    }
 
-    @Lob
-    private String description;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    // 메모리에서만 사용
-    @Transient
-    private int temp;
+    public String getUserName() {
+        return userName;
+    }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
+//    public void changeTeam(Team team) {
+//        // ** 항목에 실수를 방지하기 위해 적용된 코드
+//        this.team = team;
+//
+//        // 연관관계 편의 메서드
+//        team.getMembers().add(this);
+//    }
 }
 
 
