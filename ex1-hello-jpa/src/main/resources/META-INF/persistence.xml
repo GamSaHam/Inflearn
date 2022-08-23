@@ -3,11 +3,15 @@
              xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
     <persistence-unit name="hello">
-        <class>hellopja.Member</class>
-        <class>hellopja.Team</class>
+        <class>hellopja.Album</class>
+        <class>hellopja.Book</class>
+        <class>hellopja.Item</class>
         <class>hellopja.Locker</class>
-        <class>hellopja.Product</class>
+        <class>hellopja.Member</class>
         <class>hellopja.MemberProduct</class>
+        <class>hellopja.Movie</class>
+        <class>hellopja.Product</class>
+        <class>hellopja.Team</class>
         <properties>
             <!-- 필수 속성 -->
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>

@@ -231,6 +231,7 @@ public class RelationMappingTest {
             memberProduct.setProduct(product);
             em.persist(memberProduct);
 
+
             tx.commit();
         } catch (Exception e) {
             System.out.println("e = " + e);
