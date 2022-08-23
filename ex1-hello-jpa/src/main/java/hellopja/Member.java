@@ -13,10 +13,10 @@ public class Member {
     @Id // 기본키 매핑
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq_generator")
     @GeneratedValue
+    @Column(name = "MEMBER_ID")
     private Long id;
     private String userName;
     private Integer age;
-
 
     @ManyToOne
     @JoinColumn(name = "TEAM_ID")
@@ -42,6 +42,9 @@ public class Member {
 //    @Transient
 //    private int temp;
 
+    @OneToOne
+    @JoinColumn(name = "LOCKER_ID")
+    private  Locker locker;
 
     public Long getId() {
         return id;

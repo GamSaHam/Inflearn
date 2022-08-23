@@ -5,6 +5,9 @@
     <persistence-unit name="hello">
         <class>hellopja.Member</class>
         <class>hellopja.Team</class>
+        <class>hellopja.Locker</class>
+        <class>hellopja.Product</class>
+        <class>hellopja.MemberProduct</class>
         <properties>
             <!-- 필수 속성 -->
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
