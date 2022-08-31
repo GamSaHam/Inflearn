@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 //@SequenceGenerator(name="member_seq_generator" , sequenceName = "member_seq")
-public class Member {
+public class Member extends BaseEntity{
     @Id // 기본키 매핑
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq_generator")
     @GeneratedValue
@@ -45,6 +46,7 @@ public class Member {
     @OneToOne
     @JoinColumn(name = "LOCKER_ID")
     private  Locker locker;
+
 
     public Long getId() {
         return id;

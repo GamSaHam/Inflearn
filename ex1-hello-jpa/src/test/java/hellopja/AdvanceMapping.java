@@ -66,6 +66,9 @@ public class AdvanceMapping {
             // 묵어지는 구문이 없다.
             // not null 제약조건 사용가능
 
+            // 단순하면 단일 테이블 전략을 사용한다.
+            // 비지니스로 중요하면 조인전략을 활용한다.
+
             tx.commit();
         } catch (Exception e) {
             System.out.println("e = " + e);
