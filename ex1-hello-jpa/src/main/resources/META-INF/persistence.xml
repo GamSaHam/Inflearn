@@ -5,11 +5,13 @@
     <persistence-unit name="hello">
         <class>hellopja.Album</class>
         <class>hellopja.Book</class>
+        <class>hellopja.Child</class>
         <class>hellopja.Item</class>
         <class>hellopja.Locker</class>
         <class>hellopja.Member</class>
         <class>hellopja.MemberProduct</class>
         <class>hellopja.Movie</class>
+        <class>hellopja.Parent</class>
         <class>hellopja.Product</class>
         <class>hellopja.Team</class>
         <properties>

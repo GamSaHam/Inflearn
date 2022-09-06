@@ -19,7 +19,7 @@ public class Member extends BaseEntity{
     private String userName;
     private Integer age;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER) // fetch 타입을 Lazy로 설정하면 프록시로 가지고 오게 된다. 디폴트가 Eager
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
