@@ -46,10 +46,19 @@ public class BasicTest {
             }
 
             // 한개
+            // 결과없없으면 NoResultException, 둘 이상이면 NonUniqueResultException 에러발생
             typedQuery = em.createQuery("select m from Member as m where m.age < 10", Member.class);
             Member findMember = typedQuery.getSingleResult();
             System.out.println("findMember.getUsername() = " + findMember.getUsername());
 
+            // Spring Data JPA 에서 null or Optional 로 해준다. try{} catch 잡아서 따로 처리 해준다. 
+
+            findMember = em.createQuery("select m from Member as m where m.age < :age", Member.class)
+                    .setParameter("age", 10)
+                    .getSingleResult();
+            System.out.println("findMember.getUsername() = " + findMember.getUsername());
+
+            // 위치 기반도 사용가능하다. 하지만 사용하지 않는 것을 권장
 
             tx.commit();
         } catch (Exception e) {
