@@ -5,6 +5,10 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Data
+//@NamedQuery(
+//        name = "Member.findByUsername",
+//        query = "select m from Member m where m.username = :username"
+//)
 @Entity
 public class Member {
 
