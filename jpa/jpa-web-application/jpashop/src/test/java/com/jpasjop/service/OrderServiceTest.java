@@ -7,7 +7,7 @@ import com.jpasjop.domain.OrderStatus;
 import com.jpasjop.domain.item.Book;
 import com.jpasjop.exception.NotEnoughStockException;
 import com.jpasjop.repository.OrderRepository;
-import org.assertj.core.api.Assertions;
+import com.jpasjop.repository.OrderSearch;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,8 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -35,7 +37,7 @@ class OrderServiceTest {
 
         // 단위테스트가 중요하다. == 함수 테스트
         // given
-        Member member = createMember();
+        Member member = createMember("회원A");
         Book book = createBook();
 
         int orderCount = 2;
@@ -59,7 +61,7 @@ class OrderServiceTest {
     @Test
     public void exceedInventory() throws Exception {
         // given
-        Member member = createMember();
+        Member member = createMember("회원A");
         Book book = createBook();
 
         // when
@@ -72,7 +74,7 @@ class OrderServiceTest {
     @Test
     public void cancelOrder() throws Exception {
         // given
-        Member member = createMember();
+        Member member = createMember("회원A");
         Book book = createBook();
 
         int orderCount = 2;
@@ -93,23 +95,37 @@ class OrderServiceTest {
 
     }
 
+    @Test
+    public void findOrders() throws Exception {
+        // given
+        Member member = createMember("회원A");
+        Member member2 = createMember("회원B");
+        Book book = createBook();
+
+        // when
+        Long orderId = orderService.order(member.getId(), book.getId(), 1);
+        Long orderId2 = orderService.order(member2.getId(), book.getId(), 2);
+
+        List<Order> findOrders = orderService.findOrders(new OrderSearch("회원A", OrderStatus.ORDER));
+        //then
+        assertThat(findOrders.size()).isEqualTo(1);
+    }
 
     private Book createBook() {
         Book book = new Book();
-        book.setName("시골 JPA");
+        book.setName("JPA 책");
         book.setPrice(10000);
         book.setStockQuantity(10);
         em.persist(book);
         return book;
     }
 
-    private Member createMember() {
+    private Member createMember(String name) {
         Member member = new Member();
-        member.setName("회원1");
+        member.setName(name);
         member.setAddress(new Address("서울", "관악구", "685-175"));
         em.persist(member);
         return member;
     }
-
 
 }
