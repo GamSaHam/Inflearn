@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+// Spring Component Scan
+// JPA 공통적인 예외로 포함
 public class TeamJpaRepository {
 
     @PersistenceContext
@@ -41,6 +43,5 @@ public class TeamJpaRepository {
         return em.createQuery("select count(t) from Team t", Long.class)
                 .getSingleResult();
     }
-
 
 }

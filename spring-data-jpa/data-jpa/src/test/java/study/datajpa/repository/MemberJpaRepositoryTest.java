@@ -61,10 +61,79 @@ class MemberJpaRepositoryTest {
 
         long deletedCount = memberJpaRepository.count();
         assertThat(deletedCount).isEqualTo(0);
-
-
-
     }
 
+
+    @Test
+    public void findByUsernameAndAgeGreaterThenTest() throws Exception {
+        // given
+        // when
+        Member userA = new Member("userA", 10);
+        Member userB = new Member("userB", 20);
+        memberJpaRepository.save(userA);
+        memberJpaRepository.save(userA);
+
+        //then
+        List<Member> findMembers = memberJpaRepository.findByUsernameAndAgeGreaterThen("userA", 5);
+
+        assertThat(findMembers.get(0).getUsername()).isEqualTo("userA");
+        assertThat(findMembers.get(0).getAge()).isEqualTo(10);
+        assertThat(findMembers.size()).isEqualTo(1);
+    }
+
+
+    @Test
+    public void testNamedQuery() throws Exception {
+        // given
+        // when
+        Member userA = new Member("userA", 10);
+        Member userB = new Member("userB", 20);
+        memberJpaRepository.save(userA);
+        memberJpaRepository.save(userA);
+
+        //then
+        List<Member> result = memberJpaRepository.findByUsername("userA");
+
+        Member findMember = result.get(0);
+
+        assertThat(findMember).isEqualTo(userA);
+    }
+
+    @Test
+    public void paging() {
+        for(int i=1;i<=10;i++) {
+            memberJpaRepository.save(new Member("member" + i, 10));
+        }
+
+        int age = 10;
+        int offset = 0;
+        int limit = 3;
+
+        List<Member> pagedMember = memberJpaRepository.findByPage(age, offset, limit);
+        long totalCount = memberJpaRepository.totalCount(10);
+
+        // 페이지 계산 공식 적용...
+        // totalPage = totalCount / size ...
+        // 마지막 페이지 ...
+        // 최초 페이지 ...
+
+        // then
+        assertThat(pagedMember.size()).isEqualTo(3);
+        assertThat(totalCount).isEqualTo(10);
+    }
+
+    @Test
+    public void bulkUpdate() {
+        // given
+        for(int i=1;i<=10;i++) {
+            memberJpaRepository.save(new Member("member" + i, i));
+        }
+
+        // when
+        int row = memberJpaRepository.bulkAgePlus(5);
+
+        // then
+        assertThat(row).isEqualTo(6);
+    }
 
 }
