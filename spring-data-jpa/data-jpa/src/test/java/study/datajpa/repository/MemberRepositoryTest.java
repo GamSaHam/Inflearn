@@ -33,6 +33,10 @@ class MemberRepositoryTest {
     @PersistenceContext
     EntityManager em;
 
+
+    @Autowired
+    MemberQueryRepository memberQueryRepository;
+
     @Test
     public void testMember() throws Exception {
         // 프록시 기술을 활용하여 Spring Data JPA 구현체를 의존성 주입을 해준다.
@@ -358,6 +362,19 @@ class MemberRepositoryTest {
         // 돈관련된거는 락을 걸어서 정확하게 해야한다.
         List<Member> result = memberRepository.findLockByUsername("member1");
     }
+
+    @Test
+    public void callCustom() {
+        // Impl 항목을 Spring-jpa 에서 Custom 항목을 찾아준다.
+        // JPA Repository로만 해결 되지 않을 경우 Custom을 사용하요
+        // Custom 항목에서 Query SDL(90%), JDBC template(10%)
+        List<Member> result = memberRepository.findMemberCustom();
+
+        // 핵심 비지니스 있는 리포지토리랑 화면에 DTO랑 Repository를 분리하는 편이다.
+        // 활용편 2에 나와있는 구문이라 활용2편을 참조
+        // 아키텍쳐 적으로 구분을해야한다.
+    }
+
 
 
 
