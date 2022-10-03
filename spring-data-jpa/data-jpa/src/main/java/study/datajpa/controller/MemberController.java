@@ -18,6 +18,13 @@ public class MemberController {
 
     private final MemberRepository memberRepository;
 
+//    @PostConstruct
+    public void init() {
+        for (int i = 1; i <= 100; i++) {
+            memberRepository.save(new Member("user" + i, i));
+        }
+    }
+
     @GetMapping("/members/{id}")
     public String findMember(@PathVariable("id") Long id) {
         Member member = memberRepository.findById(id).get();
@@ -45,15 +52,14 @@ public class MemberController {
 
         // DTO(Data Transfer Object를 반환해야 한다.
 
+        // Transactional(readOnly = true) 항목을 하면 플러시를 생략해서 약간의 성능 향상을
+        // 얻을 수 있다.
+
 
         return map;
     }
 
-    @PostConstruct
-    public void init() {
-        for (int i = 1; i <= 100; i++) {
-            memberRepository.save(new Member("user" + i, i));
-        }
-    }
+
+
 
 }

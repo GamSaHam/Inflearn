@@ -3,10 +3,7 @@ package study.datajpa.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDto;
@@ -15,13 +12,11 @@ import study.datajpa.entity.Team;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -375,6 +370,112 @@ class MemberRepositoryTest {
         // 아키텍쳐 적으로 구분을해야한다.
     }
 
+    @Test
+    public void queryByExample() {
+        Team teamA = new Team("teamA");
+        em.persist(teamA);
+
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 20, teamA);
+        em.persist(member1);
+        em.persist(member2);
+
+        em.flush();
+        em.clear();
+
+        // when
+        Member member = new Member("member1");
+        ExampleMatcher matter = ExampleMatcher.matching()
+                .withIgnoreCase("age");
+
+        Example<Member> example = Example.of(member, matter);
+        List<Member> result = memberRepository.findAll(example);
+
+        assertThat(result.get(0).getUsername()).isEqualTo("member1");
+        // 조인 구문에서 완벽한 해결이 안된다. inner 조인만 가능하고 left [outer] join 이 안된다.
+    }
+
+    @Test
+    public void projections() {
+        Team teamA = new Team("teamA");
+        em.persist(teamA);
+
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 20, teamA);
+        em.persist(member1);
+        em.persist(member2);
+
+        em.flush();
+        em.clear();
+
+        // when
+//        List<UsernameOnly> result = memberRepository.findProjectionsByUsername("member1");
+
+//        for (UsernameOnly usernameOnly : result) {
+//            System.out.println("usernameOnly.getUsername() = " + usernameOnly.getUsername());
+//        }
+
+        // 구현체는 Spring Jpa 에서 만든다.
+
+//        List<UsernameOnlyDto> result = memberRepository.findProjectionsByUsername("member1");
+//        List<UsernameOnlyDto> result = memberRepository.findProjectionsByUsername("member1");
+//        List<UsernameOnlyDto> result = memberRepository.findProjectionsByUsername("member1", UsernameOnlyDto.class);
+        List<NestedClosedProjects> result = memberRepository.findProjectionsByUsername("member1", NestedClosedProjects.class);
+
+        for (NestedClosedProjects usernameOnly : result) {
+            System.out.println("usernameOnly.getUsername() = " + usernameOnly.getUsername());
+        }
+
+        // 조인이 들어가는 순간 이것도 애매해진다.
+        // NestedClosedProjects 항목에 getTeam
+        // 프로젝션 대상이 root 엔티티면 유용하다.
+        // 프로젝션 대상이 root 엔티티를 넘어가면 JPQL SELECT 최적화가 안된다.
+        // 실무의 복잡한 쿼리를 해결하기에는 한계가 있다.
+        // 실무에서는 단순할 때만 사용하고, 조금 복잡해지면 QueryDSL을 사용하자
+
+        // 가급적 네이티브 쿼리는 사용하지 않는게 좋음, 정말 어쩔수 없을때만 사용
+
+
+    }
+
+    @Test
+    public void nativeQueryTest() {
+        Team teamA = new Team("teamA");
+        em.persist(teamA);
+
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 20, teamA);
+        em.persist(member1);
+        em.persist(member2);
+
+        em.flush();
+        em.clear();
+
+        // when
+//        Member findMember = memberRepository.findByNativeQuery("member1");
+//        System.out.println("findMember = " + findMember);
+
+        // 한계가 많음
+        // Dto로 가지고 오고 싶을때 사용할 텐데 반환타입이 몇가지 지원이 안된다.
+        // JDBC Template, Mybatis를 사용하는게 낮다
+        // JPQL처럼 애플레케이션 로딩 시점에 문법 확인 불가
+
+        Page<MemberProjection> result = memberRepository.findByNativeProjection(PageRequest.of(0, 10));
+
+        List<MemberProjection> content = result.getContent();
+
+        for (MemberProjection memberProjection : content) {
+            System.out.println("memberProjection.getUsername() = " + memberProjection.getUsername());
+            System.out.println("memberProjection.getTeamName() = " + memberProjection.getTeamName());
+        }
+
+        // 네이티브 쿼리랑 메칭을 할 수 있다.
+        // 정적은 해결할 수있다. 정적은 해결할 수 없다. 99 퍼 안쓴다.
+        // 복잡한 쿼리는 QueryDSL로 풀어낸다.
+        // 한방 쿼리를 할려고 해서 안풀리는 경우가 있다.
+        // 하둡 시스템에서 말아서 올라온다.
+
+    }
 
 
 
