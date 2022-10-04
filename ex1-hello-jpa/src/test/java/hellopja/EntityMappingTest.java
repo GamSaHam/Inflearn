@@ -55,7 +55,7 @@ class EntityMappingTest {
             // EnumType.ORDINAL 순서를 데이터베이스저장, STRING 이름을 데이터 베이스에 저장
             Member member = new Member();
             member.setId(1L);
-            member.setUserName("A");
+            member.setUsername("A");
 //            member.setRolType(RolType.USER);
 
             em.persist(member);
@@ -95,7 +95,7 @@ class EntityMappingTest {
 
         try {
             Member member = new Member();
-            member.setUserName("C");
+            member.setUsername("C");
 
             System.out.println("===================");
             // IDENTITY전략을 사용하면 INSERT INFO 항목을 실행 한다.

@@ -25,7 +25,7 @@ public class RelationMappingTest {
             em.persist(team);
 
             Member member = new Member();
-            member.setUserName("member1");
+            member.setUsername("member1");
             member.setTeam(team);
 
             em.persist(member);
@@ -76,7 +76,7 @@ public class RelationMappingTest {
 
             for (Member member : findMembers) {
                 System.out.println("member.id = " + member.getId());
-                System.out.println("member.name = " + member.getUserName());
+                System.out.println("member.name = " + member.getUsername());
             }
 
             System.out.println("===================");
@@ -126,7 +126,7 @@ public class RelationMappingTest {
 
             System.out.println("===================");
             for (Member member : members) {
-                System.out.println("member.getUserName() = " + member.getUserName());
+                System.out.println("member.getUserName() = " + member.getUsername());
             }
             System.out.println("===================");
             tx.commit();
@@ -220,7 +220,7 @@ public class RelationMappingTest {
 
             // 중간 에 MemberProduct 항목을 만들어줘서 ManyToMany 항목을 사용하지 않는다.
             Member member = new Member();
-            member.setUserName("member1");
+            member.setUsername("member1");
             em.persist(member);
 
             Product product = new Product();
@@ -255,7 +255,7 @@ public class RelationMappingTest {
         try {
 
             Member member = new Member();
-            member.setUserName("user1");
+            member.setUsername("user1");
             member.setCreatedBy("kim");
             member.setCreatedDate(LocalDateTime.now());
 

@@ -1,7 +1,6 @@
 package hellopja;
 
 import org.hibernate.Hibernate;
-import org.hibernate.jpa.internal.PersistenceUnitUtilImpl;
 import org.junit.jupiter.api.Test;
 
 import javax.persistence.*;
@@ -23,7 +22,7 @@ public class ProxyTest {
             em.persist(team);
 
             Member member = new Member();
-            member.setUserName("홍길동");
+            member.setUsername("홍길동");
             member.setTeam(team);
 
             em.persist(member);
@@ -48,12 +47,12 @@ public class ProxyTest {
     }
 
     private void printMember(Member member) {
-        String userName = member.getUserName();
+        String userName = member.getUsername();
         System.out.println("userName = " + userName);
     }
 
     private void printMemberAndTeam(Member member) {
-        String userName = member.getUserName();
+        String userName = member.getUsername();
         System.out.println("userName = " + userName);
 
         Team team = member.getTeam();
@@ -71,13 +70,13 @@ public class ProxyTest {
         try {
 
             Member member1 = new Member();
-            member1.setUserName("hello");
+            member1.setUsername("hello");
 
             em.persist(member1);
 
 
             Member member2 = new Member();
-            member2.setUserName("hello");
+            member2.setUsername("hello");
 
             em.persist(member2);
 
@@ -90,8 +89,8 @@ public class ProxyTest {
             Member findMember = em.getReference(Member.class, member1.getId());
             System.out.println("findMember.getClass() = " + findMember.getClass());
             System.out.println("findMember.getId() = " + findMember.getId());
-            System.out.println("findMember.getUsername() = " + findMember.getUserName());
-            System.out.println("findMember.getUsername() = " + findMember.getUserName());
+            System.out.println("findMember.getUsername() = " + findMember.getUsername());
+            System.out.println("findMember.getUsername() = " + findMember.getUsername());
             System.out.println("===================");
 
             //가짜(프록시) 객체를 전달한다.
@@ -138,7 +137,7 @@ public class ProxyTest {
 
         try {
             Member member = new Member();
-            member.setUserName("hello");
+            member.setUsername("hello");
 
             em.persist(member);
 
@@ -178,7 +177,7 @@ public class ProxyTest {
 
         try {
             Member member = new Member();
-            member.setUserName("hello");
+            member.setUsername("hello");
 
             em.persist(member);
 
@@ -228,7 +227,7 @@ public class ProxyTest {
             em.persist(team);
 
             Member member = new Member();
-            member.setUserName("hello");
+            member.setUsername("hello");
             member.setTeam(team);
             em.persist(member);
 
@@ -278,7 +277,7 @@ public class ProxyTest {
             em.persist(team);
 
             Member member = new Member();
-            member.setUserName("hello");
+            member.setUsername("hello");
             member.setTeam(team);
             em.persist(member);
 
@@ -288,7 +287,7 @@ public class ProxyTest {
 
 
             Member member2 = new Member();
-            member2.setUserName("hello");
+            member2.setUsername("hello");
             member2.setTeam(team2);
             em.persist(member2);
 
@@ -353,7 +352,7 @@ public class ProxyTest {
             // PERSIS: 영속
             // REMOVE: 삭제
 
-            // Child 가 소유자가 하나일때 다른 연관관계가 없을때만 사용가능
+            // Child 가 소유자가 하나일때 사용가능
             // Parent 라이프 사이클이 똑같을 때
             // 단일 소유자 일때
 
@@ -366,6 +365,9 @@ public class ProxyTest {
             // CaseCade.ALL orphanRemoval = true
             // 두옵션을 활성하면 생명주기를 부모 엔티티를 통해서 자식의 생명 주기를 관리할 수 있음
             // 도메인 주도 설계 Aggregate Root개념을 구현 할때 유용
+
+            // Order 항목에서 Delivery 항목이 있으면 Delivery 항목에 Cascade.ALL 을 걸어주면
+            // Order 항목만 저장하더라도 Delivery 항목이 자동저장된다.
 
 
             tx.commit();

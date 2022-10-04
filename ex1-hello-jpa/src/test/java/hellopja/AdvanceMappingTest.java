@@ -8,7 +8,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
-public class AdvanceMapping {
+public class AdvanceMappingTest {
 
     @Test
     void advanceMappingTest() {
