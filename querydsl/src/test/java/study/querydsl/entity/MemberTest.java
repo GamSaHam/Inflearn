@@ -1,9 +1,12 @@
 package study.querydsl.entity;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
@@ -11,6 +14,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import study.querydsl.dto.MemberDto;
 import study.querydsl.dto.UserDto;
@@ -22,6 +26,7 @@ import javax.persistence.PersistenceUnit;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.notIn;
 import static study.querydsl.entity.QMember.member;
 import static study.querydsl.entity.QTeam.team;
 
@@ -609,7 +614,6 @@ class MemberTest {
 
     @Test
     public void findUserDto() {
-
         QMember memberSub = new QMember("memberSub");
 
         List<UserDto> result = queryFactory
@@ -629,6 +633,175 @@ class MemberTest {
             System.out.println("userDto = " + userDto);
         }
     }
+
+    @Test
+    public void dynamicQueryBooleanBuilder() {
+
+        String usernameParam = "member1";
+        Integer ageParam = null;
+
+
+        List<Member> result = searchMember1(usernameParam, ageParam);
+
+
+        for (Member member : result) {
+
+            System.out.println("member = " + member);
+        }
+    }
+
+    private List<Member> searchMember1(String usernameCond, Integer ageCond) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        if(usernameCond != null) {
+            booleanBuilder.and(member.username.eq(usernameCond));
+        }
+
+        if(ageCond != null) {
+            booleanBuilder.and(member.age.eq(ageCond));
+        }
+
+
+        return queryFactory
+                .selectFrom(member)
+                .where(booleanBuilder)
+                .fetch();
+    }
+
+
+    @Test
+    public void dynamicQueryWhereParam() throws Exception {
+        String usernameParam = "member1";
+        Integer ageParam = 20;
+
+        List<Member> result = searchMember2(usernameParam, ageParam);
+
+        for (Member member : result) {
+
+            System.out.println("member = " + member);
+        }
+    }
+
+    private List<Member> searchMember2(String usernameCond, Integer ageCond) {
+        return queryFactory
+                .selectFrom(member)
+//                .where(usernameEq(usernameCond), ageEq(ageCond))
+                .where(allEq(usernameCond, ageCond))
+                .fetch();
+    }
+
+    private BooleanExpression usernameEq(String usernameCond) {
+        return usernameCond != null ? member.username.eq(usernameCond) : null;
+    }
+
+    private BooleanExpression ageEq(Integer ageCond) {
+        return ageCond != null ? member.age.eq(ageCond) : null;
+    }
+
+    private Predicate allEq(String usernameCond, Integer ageCond) {
+        return usernameEq(usernameCond).and(ageEq(ageCond));
+    }
+
+
+    @Test
+    public void bulkUpdateTest() throws Exception {
+        // member1 = 10 -> 비회원
+        // member2 = 20 -> 비회원
+        // member3 = 30 -> 회원
+        // member4 = 40 -> 회원
+
+        long count = queryFactory
+                .update(member)
+                .set(member.username, "비회원")
+                .where(member.age.lt(28))
+                .execute();
+
+        em.clear();
+
+        // 벌크 연산 시에
+        // 영속성 컨텐스트에서는 그대로 이고
+        // 디비 상에서는 비회원으로 변경되어있다.
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        for (Member member : result) {
+            System.out.println("member = " + member);
+        }
+    }
+
+    @Test
+    public void bulkAddTest() {
+
+        long count = queryFactory
+                .update(member)
+//                .set(member.age, member.age.add(1))
+                .set(member.age, member.age.multiply(2))
+                .execute();
+
+        System.out.println("count = " + count);
+    }
+
+    @Test
+    public void bulkDeleteTest() throws Exception {
+        long count = queryFactory
+                .delete(member)
+                .where(member.age.gt(18))
+                .execute();
+
+        System.out.println("count = " + count);
+
+        em.flush();
+        em.clear();
+
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        for (Member member : result) {
+            System.out.println("member = " + member);
+        }
+    }
+
+    @Test
+    public void sqlFunctionTest() {
+        // H2Dialect 에 등록되어있어야한다.
+        // H2Dialect 를 상속받아 등록을하고 사용하여한다.
+        // 
+        List<String> result = queryFactory
+                .select(
+                        Expressions
+                                .stringTemplate("function('replace', {0}, {1}, {2})"
+                                        , member.username
+                                        , "member"
+                                        , "M"
+                                )
+                )
+                .from(member)
+                .fetch();
+
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
+    }
+
+    @Test
+    public void sqlFunction2Test() throws Exception {
+        List<String> result = queryFactory
+                .select(member.username)
+                .from(member)
+                .where(member.username.eq(
+//                        Expressions.stringTemplate("function('lower', {0})", member.username)
+                    member.username.lower() // 이렇게 사용하는 것을 권장
+                ))
+                .fetch();
+
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
+
+    }
+
 
 
 }
